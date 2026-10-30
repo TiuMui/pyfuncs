@@ -12,7 +12,7 @@ DATA = [
 def create_table(
         data: list[list[str]],
         intersection: str = '+',
-        horisontal: str = '-',
+        horizontal: str = '-',
         vertical: str = '|',
         indent: int = 1
 ) -> list[str]:
@@ -26,9 +26,25 @@ def create_table(
     Возвращает список готовых для вывода строк с графическими
     элементами таблицы.
     """
-    # Сделать валидацию data - длины вложенных списков должны быть одинаковы.
 
-    num_column = max(len(row) for row in data)
+    if not isinstance(data, list) or not data:
+        raise ValueError('Данные должны быть в виде заполненного списка.')
+
+    structure = (all(isinstance(row, list) for row in data) and
+                 data[0] and
+                 all(len(row) == len(data[0]) for row in data) and
+                 all(isinstance(cell, str) for row in data for cell in row))
+
+    if not structure:
+        raise ValueError(
+            'Вложенные списки должны иметь одинаковую ненулевую длину и '
+            'содержать строки.'
+        )
+
+    if type(indent) is not int or indent < 0:
+        raise ValueError('Отступ должен быть целым неотрицательным числом.')
+
+    num_column = len(data[0])
     max_len_cell = (max(len(cell_text) for row in data for cell_text in row) +
                     2 * indent)
 
@@ -38,7 +54,7 @@ def create_table(
 
     result = []
 
-    top_bottom_line = ((intersection + horisontal * max_len_cell) *
+    top_bottom_line = ((intersection + horizontal * max_len_cell) *
                        num_column + intersection)
     result.append(top_bottom_line)
 
