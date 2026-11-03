@@ -54,17 +54,15 @@ def create_table(
             if column_widths[i] < (cell_width := len(cell) + 2 * indent):
                 column_widths[i] = cell_width
 
-    top_bottom_line = ''.join(
-        intersection + horizontal * width for width in column_widths
-    ) + intersection
+    line_gen = (intersection + horizontal * width for width in column_widths)
+    top_bottom_line = ''.join(line_gen) + intersection
 
     result = [top_bottom_line]
 
     for row_cells in data:
-        row_str = ''
-        for i, cell in enumerate(row_cells):
-            row_str += vertical + cell.center(column_widths[i])
-        row_str += vertical
+        cells_gen = (vertical + cell.center(column_widths[i])
+                     for i, cell in enumerate(row_cells))
+        row_str = ''.join(cells_gen) + vertical
         result.extend([row_str, top_bottom_line])
 
     return result
