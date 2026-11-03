@@ -1,11 +1,11 @@
 """Функции генерации таблиц для отображения в терминале."""
 
 DATA = [
-    ['Name', 'Status', 'Description'],
-    ['Hgftye', 'Jhfewuc', 'Kjfhebc'],
-    ['Hfwqd', 'Hretcv', 'Ytercbs'],
-    ['Kjfhye', 'Nvcbyev', 'Rsddvcg dtwtfad'],
-    ['Ldhfyeg', 'Gf', 'Trea'],
+    ['Name', 'Status', ''],
+    ['Hgftye', 'Jhfewuc', ''],
+    ['Hfwqd', 'Hretcv', ''],
+    ['Kjfhye', 'Nvcbyev', ''],
+    ['Ldhfyeg', 'Gf', ''],
 ]
 
 
@@ -44,26 +44,29 @@ def create_table(
     if type(indent) is not int or indent < 0:
         raise ValueError('Отступ должен быть целым неотрицательным числом.')
 
-    num_column = len(data[0])
-    max_len_cell = (max(len(cell_text) for row in data for cell_text in row) +
-                    2 * indent)
-
-    # Реализовать не одну максимальную ширину ячейки на всю таблицу,
-    # а у каждого столбца свою ширину (например, построить список с ширинами
-    # столбцов).
-
-    result = []
-
-    top_bottom_line = ((intersection + horizontal * max_len_cell) *
-                       num_column + intersection)
-    result.append(top_bottom_line)
+    column_count = len(data[0])
+    column_widths = [2 * indent] * column_count
 
     for row_cells in data:
+        for i, cell in enumerate(row_cells):
+            if column_widths[i] < (cell_width := len(cell) + 2 * indent):
+                column_widths[i] = cell_width
+
+    result = []
+    step = 1
+    for row_cells in data:
+        if step == 1:
+            top_bottom_line = ''
+            for column_width in column_widths:
+                top_bottom_line += intersection + horizontal * column_width
+            top_bottom_line += intersection
+            result.append(top_bottom_line)
         row_str = ''
-        for cell in row_cells:
-            row_str += vertical + cell.center(max_len_cell)
+        for i, cell in enumerate(row_cells):
+            row_str += vertical + cell.center(column_widths[i])
         row_str += vertical
         result.extend([row_str, top_bottom_line])
+        step += 1
 
     return result
 
