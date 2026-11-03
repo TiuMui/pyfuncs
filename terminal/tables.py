@@ -3,8 +3,8 @@
 DATA = [
     ['Name', 'Status', ''],
     ['Hgftye', 'Jhfewuc', ''],
-    ['Hfwqd', 'Hretcv', ''],
-    ['Kjfhye', 'Nvcbyev', ''],
+    ['Hfwqd', 'Hretcv', 'Hfkevrr vrev'],
+    ['Kjfhdfbdfb dfbye', 'Nvcbyev', ''],
     ['Ldhfyeg', 'Gf', ''],
 ]
 
@@ -27,6 +27,8 @@ def create_table(
     элементами таблицы.
     """
 
+    # Объединить проверку структуры data и вычисление ширин столбцов
+    # для уменьшения количества проходов по данным:
     if not isinstance(data, list) or not data:
         raise ValueError('Данные должны быть в виде заполненного списка.')
 
@@ -52,21 +54,18 @@ def create_table(
             if column_widths[i] < (cell_width := len(cell) + 2 * indent):
                 column_widths[i] = cell_width
 
-    result = []
-    step = 1
+    top_bottom_line = ''.join(
+        intersection + horizontal * width for width in column_widths
+    ) + intersection
+
+    result = [top_bottom_line]
+
     for row_cells in data:
-        if step == 1:
-            top_bottom_line = ''
-            for column_width in column_widths:
-                top_bottom_line += intersection + horizontal * column_width
-            top_bottom_line += intersection
-            result.append(top_bottom_line)
         row_str = ''
         for i, cell in enumerate(row_cells):
             row_str += vertical + cell.center(column_widths[i])
         row_str += vertical
         result.extend([row_str, top_bottom_line])
-        step += 1
 
     return result
 
