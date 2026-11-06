@@ -41,20 +41,17 @@ def normalizer_list_of_lists(
         )
 
     max_len_sub_list = max(len(sub_list) for sub_list in raw_data)
-    len_norm_data = len(raw_data)
 
     # Переписать построение нормализованных данных через списковое включение:
 
     norm_data = []
-
-    for i in range(len_norm_data):
-        norm_data.append([])
-        for j in range(max_len_sub_list):
-            try:
-                norm_data[i].append(str(raw_data[i][j]))
-            except IndexError:
-                norm_data[i].append(empty)
-
+    for sub_list in raw_data:
+        sub_data = []
+        for cell in sub_list:
+            sub_data.append(str(cell))
+        if (len_sub_data := len(sub_data)) < max_len_sub_list:
+            sub_data += [empty] * (max_len_sub_list - len_sub_data)
+        norm_data.append(sub_data)
     return norm_data
 
 
