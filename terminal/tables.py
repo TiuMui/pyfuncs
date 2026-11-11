@@ -5,7 +5,7 @@ DATA = [
     ['Hgftye', 'Jhfewuc', ''],
     ['Hfwqd', 'Hretcv', 'Hfkevrr vrev'],
     ['Kjfhdfbdfb dfbye', 'Nvcbyev', ''],
-    ['Ldhfyeg', 'Gf', ''],
+    ['Ldhfyeg', 'Gf', '']
 ]
 
 
@@ -27,30 +27,32 @@ def create_table(
     элементами таблицы.
     """
 
-    # Объединить проверку структуры data и вычисление ширин столбцов
-    # для уменьшения количества проходов по данным:
     if not isinstance(data, list) or not data:
         raise ValueError('Данные должны быть в виде заполненного списка.')
-
-    structure = (all(isinstance(row, list) for row in data) and
-                 data[0] and
-                 all(len(row) == len(data[0]) for row in data) and
-                 all(isinstance(cell, str) for row in data for cell in row))
-
-    if not structure:
-        raise ValueError(
-            'Вложенные списки должны иметь одинаковую ненулевую длину и '
-            'содержать строки.'
-        )
 
     if type(indent) is not int or indent < 0:
         raise ValueError('Отступ должен быть целым неотрицательным числом.')
 
     column_count = len(data[0])
     column_widths = [2 * indent] * column_count
+    len_sub_list = None
 
-    for row_cells in data:
+    for step, row_cells in enumerate(data):
+        if not isinstance(row_cells, list):
+            raise ValueError('Входные данные должны быть списком списков.')
+        if not row_cells:
+            raise ValueError('Ни один вложенный список не должен быть пустым.')
+
+        prew_len_sub_list = len_sub_list
+        len_sub_list = len(row_cells)
+        if step > 0 and len_sub_list != prew_len_sub_list:
+            raise ValueError('Вложенные списки должны иметь одинаковую длину.')
+
         for i, cell in enumerate(row_cells):
+            if not isinstance(cell, str):
+                raise ValueError(
+                    'Вложенные списки должны содержать только строки.'
+                )
             if column_widths[i] < (cell_width := len(cell) + 2 * indent):
                 column_widths[i] = cell_width
 
