@@ -25,8 +25,9 @@ def normalizer_list_of_lists(
     if not isinstance(raw_data, list) or not raw_data:
         raise ValueError('Данные должны быть в виде заполненного списка.')
 
-    structure = (all(isinstance(sub_list, list) for sub_list in raw_data) and
-                 any(raw_data))
+    structure = all(
+        isinstance(sub_list, list) for sub_list in raw_data
+    ) and any(raw_data)
 
     if not structure:
         raise ValueError(
@@ -36,22 +37,17 @@ def normalizer_list_of_lists(
 
     if not isinstance(empty, str):
         raise ValueError(
-            'Значение для недостающих элементов должно '
-            'быть str.'
+            'Значение для недостающих элементов должно быть str.'
         )
 
     max_len_sub_list = max(len(sub_list) for sub_list in raw_data)
 
-    # Переписать построение нормализованных данных через списковое включение:
+    norm_data = [
+        [str(cell) for cell in sub_list] +
+        [empty] * (max_len_sub_list - len(sub_list))
+        for sub_list in raw_data
+    ]
 
-    norm_data = []
-    for sub_list in raw_data:
-        sub_data = []
-        for cell in sub_list:
-            sub_data.append(str(cell))
-        if (len_sub_data := len(sub_data)) < max_len_sub_list:
-            sub_data += [empty] * (max_len_sub_list - len_sub_data)
-        norm_data.append(sub_data)
     return norm_data
 
 
