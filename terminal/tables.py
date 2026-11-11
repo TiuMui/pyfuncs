@@ -43,9 +43,9 @@ def create_table(
         if not row_cells:
             raise ValueError('Ни один вложенный список не должен быть пустым.')
 
-        prew_len_sub_list = len_sub_list
+        prev_len_sub_list = len_sub_list
         len_sub_list = len(row_cells)
-        if step > 0 and len_sub_list != prew_len_sub_list:
+        if step > 0 and len_sub_list != prev_len_sub_list:
             raise ValueError('Вложенные списки должны иметь одинаковую длину.')
 
         for i, cell in enumerate(row_cells):
